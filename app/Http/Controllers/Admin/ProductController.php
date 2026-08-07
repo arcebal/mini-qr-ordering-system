@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ProductImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    public function __construct(private readonly ProductImageService $images)
+    {
+    }
+
     public function index()
     {
         $products = Product::with('category')
@@ -39,14 +43,9 @@ class ProductController extends Controller
         'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-    $imagePath = null;
-
-    if ($request->hasFile('image')) {
-
-        $imagePath = $request->file('image')
-            ->store('products', 'public');
-
-    }
+    $imagePath = $request->hasFile('image')
+        ? $this->images->upload($request->file('image'))
+        : null;
 
     Product::create([
 
@@ -95,11 +94,8 @@ class ProductController extends Controller
 
     if ($request->hasFile('image')) {
 
-        if ($product->image && Storage::disk('public')->exists($product->image)) {
-            Storage::disk('public')->delete($product->image);
-        }
-
-        $imagePath = $request->file('image')->store('products', 'public');
+        $this->images->delete($product->image);
+        $imagePath = $this->images->upload($request->file('image'));
     }
 
     $product->update([
@@ -119,9 +115,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
 {
-    if ($product->image && Storage::disk('public')->exists($product->image)) {
-        Storage::disk('public')->delete($product->image);
-    }
+    $this->images->delete($product->image);
 
     $product->delete();
 

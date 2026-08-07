@@ -50,7 +50,7 @@
                 <label class="form-label">Current Image</label>
                 <br>
 
-                <img src="{{ asset('storage/'.$product->image) }}"
+                <img src="{{ $product->image_url }}"
                      width="150"
                      class="img-thumbnail">
 

@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\ProductImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    public function __construct(private readonly ProductImageService $images)
+    {
+    }
+
     /**
      * Display a listing of categories.
      */
@@ -99,9 +103,7 @@ class CategoryController extends Controller
 
         DB::transaction(function () use ($category) {
             $category->products()->each(function ($product) {
-                if ($product->image) {
-                    Storage::disk('public')->delete($product->image);
-                }
+                $this->images->delete($product->image);
 
                 $product->delete();
             });

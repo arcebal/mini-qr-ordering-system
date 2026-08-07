@@ -27,7 +27,7 @@
                         @foreach ($items as $item)
                             <div class="d-flex gap-3 {{ ! $loop->last ? 'border-bottom pb-3 mb-3' : '' }}">
                                 @if ($item->product->image)
-                                    <img src="{{ asset('storage/'.$item->product->image) }}" alt="{{ $item->product->name }}" class="cart-image">
+                                    <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="cart-image">
                                 @else
                                     <div class="cart-image d-grid place-items-center"><i class="bi bi-cup-hot fs-3 text-muted"></i></div>
                                 @endif

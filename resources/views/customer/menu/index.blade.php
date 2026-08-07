@@ -34,7 +34,7 @@
                     <div class="col-12 col-sm-6 col-lg-4">
                         <article class="menu-card">
                             @if ($product->image)
-                                <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="menu-image">
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="menu-image">
                             @else
                                 <div class="image-placeholder"><i class="bi bi-cup-hot"></i></div>
                             @endif

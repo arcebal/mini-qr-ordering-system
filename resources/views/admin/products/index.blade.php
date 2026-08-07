@@ -57,7 +57,7 @@
                         @if($product->image)
 
                             <img
-                                src="{{ asset('storage/'.$product->image) }}"
+                                src="{{ $product->image_url }}"
                                 class="img-thumbnail"
                                 width="70"
                                 height="70">
@@ -185,7 +185,7 @@
             @forelse($products as $product)
                 <article class="mobile-data-card card border shadow-sm p-3">
                     <div class="d-flex gap-3">
-                        @if($product->image)<img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="mobile-product-image">@else<div class="mobile-product-image d-grid place-items-center"><i class="bi bi-image text-muted"></i></div>@endif
+                        @if($product->image)<img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="mobile-product-image">@else<div class="mobile-product-image d-grid place-items-center"><i class="bi bi-image text-muted"></i></div>@endif
                         <div class="flex-grow-1 min-w-0">
                             <div class="d-flex justify-content-between gap-2"><strong class="text-break">{{ $product->name }}</strong>@if($product->is_available)<span class="badge bg-success">Available</span>@else<span class="badge bg-danger">Unavailable</span>@endif</div>
                             <div class="small text-muted mt-1">{{ $product->category->name }}</div>
