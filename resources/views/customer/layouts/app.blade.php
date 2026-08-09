@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#fffdf9">
-    <title>@yield('title', 'Kusina ni Juan')</title>
+    <title>@yield('title', 'Kusina Ni Aira')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -93,7 +93,7 @@
     <a class="skip-link" href="#main-content">Skip to menu content</a>
     <nav class="navbar customer-nav sticky-top" aria-label="Customer navigation">
         <div class="container py-2">
-            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><i class="bi bi-qr-code-scan"></i></span>Kusina ni Juan</a>
+            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><i class="bi bi-qr-code-scan"></i></span>Kusina Ni Aira</a>
             <a class="cart-link" href="{{ route('customer.cart.index') }}" aria-label="View cart">
                 <i class="bi bi-bag fs-5"></i>
                 @if (array_sum(session('customer_cart', [])) > 0)<span class="cart-count">{{ array_sum(session('customer_cart', [])) }}</span>@endif

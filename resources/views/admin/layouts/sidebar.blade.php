@@ -7,7 +7,7 @@
     <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
         <span class="sidebar-brand-mark"><i class="bi bi-qr-code-scan"></i></span>
         <span>
-            <strong>Kusina ni Juan</strong>
+            <strong>Kusina Ni Aira</strong>
             <small>Restaurant admin</small>
         </span>
     </a>

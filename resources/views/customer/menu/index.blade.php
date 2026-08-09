@@ -1,6 +1,6 @@
 @extends('customer.layouts.app')
 
-@section('title', 'Menu | Kusina ni Juan')
+@section('title', 'Menu | Kusina Ni Aira')
 
 @section('content')
 <header class="hero">

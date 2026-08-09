@@ -1,6 +1,6 @@
 @extends('customer.layouts.app')
 
-@section('title', 'Order Status | Kusina ni Juan')
+@section('title', 'Order Status | Kusina Ni Aira')
 
 @section('content')
 <main id="main-content" class="container py-5" style="max-width: 720px;">
