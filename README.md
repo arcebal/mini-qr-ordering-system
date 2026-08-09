@@ -91,13 +91,15 @@ The application is normally available at [http://localhost:8000](http://localhos
 
 ## Environment configuration
 
-The repository defaults to SQLite in `.env.example`:
+The example environment is configured for MySQL. Set the `DB_*` variables in `.env` or Railway to match your database, and configure `APP_URL` to the URL used by the restaurant's QR code.
+
+For Railway's Railpack builder, add this service variable so the required PHP extensions are installed during the build:
 
 ```dotenv
-DB_CONNECTION=sqlite
+RAILPACK_PHP_EXTENSIONS=gd,redis
 ```
 
-Create `database/database.sqlite` if it does not exist, or update the `DB_*` variables in `.env` to use MySQL or another supported database. Configure `APP_URL` to the URL used by the restaurant's QR code.
+Set `APP_ENV=production`, `APP_DEBUG=false`, and generate a unique production `APP_KEY`. Keep database and Cloudinary credentials in Railway variables rather than committing them to the repository.
 
 For local development, mail is sent to the log by default and queued work uses the database queue. No external mail or payment provider is required for the current ordering flow.
 
