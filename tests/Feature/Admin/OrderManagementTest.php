@@ -28,6 +28,8 @@ class OrderManagementTest extends TestCase
             ->get(route('admin.orders.show', $order))
             ->assertOk()
             ->assertSee('Chicken Adobo')
+            ->assertSee('Payment')
+            ->assertSee('Paid')
             ->assertSee('Mark as Preparing');
     }
 
@@ -47,6 +49,32 @@ class OrderManagementTest extends TestCase
             ->assertRedirect(route('admin.orders.show', $order));
 
         $this->assertDatabaseHas('orders', ['id' => $order->id, 'status' => 'completed']);
+    }
+
+    public function test_admin_can_mark_an_unpaid_order_as_paid(): void
+    {
+        $user = User::factory()->admin()->create();
+        $order = $this->order(['payment_status' => 'unpaid']);
+
+        $this->actingAs($user)
+            ->patch(route('admin.orders.payment.update', $order), ['payment_status' => 'paid'])
+            ->assertRedirect(route('admin.orders.show', $order));
+
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'payment_status' => 'paid']);
+    }
+
+    public function test_unpaid_order_cannot_be_completed(): void
+    {
+        $user = User::factory()->admin()->create();
+        $order = $this->order(['status' => 'preparing', 'payment_status' => 'unpaid']);
+
+        $this->actingAs($user)
+            ->from(route('admin.orders.show', $order))
+            ->patch(route('admin.orders.update', $order), ['status' => 'completed'])
+            ->assertRedirect(route('admin.orders.show', $order))
+            ->assertSessionHas('error', 'Payment must be marked as paid before completing this order.');
+
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'status' => 'preparing']);
     }
 
     public function test_order_cannot_skip_a_status_transition(): void
@@ -76,7 +104,7 @@ class OrderManagementTest extends TestCase
         $this->assertDatabaseCount('order_items', 1);
     }
 
-    private function order(): Order
+    private function order(array $attributes = []): Order
     {
         $category = Category::create(['name' => 'Meals', 'is_active' => true]);
         $product = Product::create([
@@ -86,13 +114,14 @@ class OrderManagementTest extends TestCase
             'stock' => 5,
             'is_available' => true,
         ]);
-        $order = Order::create([
+        $order = Order::create(array_merge([
             'order_number' => '0001',
             'customer_name' => 'Juan Dela Cruz',
             'total_amount' => '360.00',
             'status' => 'accepted',
-            'payment_status' => 'unpaid',
-        ]);
+            'payment_status' => 'paid',
+            'payment_method' => 'counter',
+        ], $attributes));
         $order->items()->create([
             'product_id' => $product->id,
             'quantity' => 2,

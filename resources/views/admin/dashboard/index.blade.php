@@ -4,10 +4,10 @@
 @php($summary = $report['summary'])
 <style>
     .report-chart { min-height: 310px; }
-    .metric-today { background: #e6f0f7; color: #175a7a; }
-    .metric-revenue { background: #e1f0e7; color: #1f6546; }
-    .metric-queue { background: #fff3d8; color: #855b16; }
-    .metric-stock { background: #f8e2e0; color: #9b3029; }
+    .metric-today { background: #f7e3eb; color: #9f405d; }
+    .metric-revenue { background: #f4e7ed; color: #7d4b61; }
+    .metric-queue { background: #f8eadc; color: #98633e; }
+    .metric-stock { background: #f8dfe5; color: #9b304b; }
 </style>
 
 {{--<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
@@ -56,11 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const currency = (value) => new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 }).format(value);
     const common = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'Georgia' } } } } };
 
-    new Chart(document.getElementById('dailyRevenueChart'), { type: 'line', data: { labels: charts.dailyRevenue.map(item => item.label), datasets: [{ label: 'Revenue', data: charts.dailyRevenue.map(item => item.revenue), borderColor: '#c8603d', backgroundColor: 'rgba(200, 96, 61, .18)', fill: true, tension: .35 }] }, options: { ...common, scales: { y: { beginAtZero: true, ticks: { callback: currency } } } } });
+    new Chart(document.getElementById('dailyRevenueChart'), { type: 'line', data: { labels: charts.dailyRevenue.map(item => item.label), datasets: [{ label: 'Revenue', data: charts.dailyRevenue.map(item => item.revenue), borderColor: '#c45c78', backgroundColor: 'rgba(196, 92, 120, .18)', fill: true, tension: .35 }] }, options: { ...common, scales: { y: { beginAtZero: true, ticks: { callback: currency } } } } });
     new Chart(document.getElementById('orderStatusChart'), { type: 'doughnut', data: { labels: charts.orderStatuses.map(item => item.label), datasets: [{ data: charts.orderStatuses.map(item => item.count), backgroundColor: charts.orderStatuses.map(item => statusColors[item.status]) }] }, options: common });
     const barOptions = { ...common, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } };
-    new Chart(document.getElementById('topProductsChart'), { type: 'bar', data: { labels: charts.topProducts.map(item => item.name), datasets: [{ data: charts.topProducts.map(item => item.quantity), backgroundColor: '#c8603d', borderRadius: 6 }] }, options: barOptions });
-    new Chart(document.getElementById('topCategoriesChart'), { type: 'bar', data: { labels: charts.topCategories.map(item => item.name), datasets: [{ data: charts.topCategories.map(item => item.quantity), backgroundColor: '#d97949', borderRadius: 6 }] }, options: barOptions });
+    new Chart(document.getElementById('topProductsChart'), { type: 'bar', data: { labels: charts.topProducts.map(item => item.name), datasets: [{ data: charts.topProducts.map(item => item.quantity), backgroundColor: '#c45c78', borderRadius: 6 }] }, options: barOptions });
+    new Chart(document.getElementById('topCategoriesChart'), { type: 'bar', data: { labels: charts.topCategories.map(item => item.name), datasets: [{ data: charts.topCategories.map(item => item.quantity), backgroundColor: '#d88ba2', borderRadius: 6 }] }, options: barOptions });
 });
 </script>
 @endpush

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -33,7 +34,8 @@ class CustomerOrderingTest extends TestCase
             ->assertOk()
             ->assertSee('Chicken Adobo')
             ->assertSee('Pork Sisig')
-            ->assertSee('Out of Stock');
+            ->assertSee('Out of Stock')
+            ->assertDontSee('Order status');
     }
 
     public function test_menu_category_button_shows_only_the_selected_category_products(): void
@@ -92,12 +94,30 @@ class CustomerOrderingTest extends TestCase
             'order_number' => '0001',
             'customer_name' => 'Juan Dela Cruz',
             'status' => 'accepted',
+            'payment_method' => 'counter',
+            'payment_status' => 'unpaid',
         ]);
         $this->assertDatabaseHas('order_items', [
             'product_id' => $product->id,
             'quantity' => 2,
         ]);
         $this->assertEmpty(session('customer_cart', []));
+    }
+
+    public function test_customer_can_place_an_order_with_mock_online_payment(): void
+    {
+        $product = $this->product(['price' => '180.00', 'stock' => 5]);
+
+        $this->withSession(['customer_cart' => [$product->id => 1], 'customer_name' => 'Juan Dela Cruz'])
+            ->post(route('customer.checkout.place'), ['payment_method' => 'mock_online'])
+            ->assertRedirect(route('customer.order-success', 1));
+
+        $this->assertDatabaseHas('orders', [
+            'id' => 1,
+            'payment_method' => 'mock_online',
+            'payment_status' => 'paid',
+            'status' => 'accepted',
+        ]);
     }
 
     public function test_placing_an_order_deducts_stock_and_marks_sold_out_product_unavailable(): void
@@ -170,13 +190,45 @@ class CustomerOrderingTest extends TestCase
         $this->withSession(['customer_name' => 'Juan Dela Cruz', 'customer_order_ids' => [$order->id]])
             ->get(route('customer.order-status', $order))
             ->assertOk()
-            ->assertJsonPath('status', 'preparing');
+            ->assertJsonPath('status', 'preparing')
+            ->assertJsonPath('payment_status', 'unpaid')
+            ->assertJsonPath('payment_method', 'counter');
 
         app('session')->flush();
 
         $this->withSession(['customer_name' => 'Another Customer', 'customer_order_ids' => []])
             ->get(route('customer.order-status', $order))
             ->assertForbidden();
+    }
+
+    public function test_customer_navigation_links_to_the_latest_order_status(): void
+    {
+        $olderOrder = Order::create([
+            'order_number' => '0001',
+            'customer_name' => 'Juan Dela Cruz',
+            'total_amount' => '180.00',
+            'status' => 'completed',
+            'payment_status' => 'paid',
+            'payment_method' => 'mock_online',
+        ]);
+        $latestOrder = Order::create([
+            'order_number' => '0002',
+            'customer_name' => 'Juan Dela Cruz',
+            'total_amount' => '50.00',
+            'status' => 'accepted',
+            'payment_status' => 'unpaid',
+            'payment_method' => 'counter',
+        ]);
+
+        $this->withSession([
+            'customer_name' => 'Juan Dela Cruz',
+            'customer_order_ids' => [$olderOrder->id, $latestOrder->id],
+        ])
+            ->get(route('customer.menu'))
+            ->assertOk()
+            ->assertSee('Order status')
+            ->assertSee(route('customer.order-success', $latestOrder), false)
+            ->assertDontSee(route('customer.order-success', $olderOrder), false);
     }
 
     public function test_customer_is_informed_when_an_order_is_deleted(): void

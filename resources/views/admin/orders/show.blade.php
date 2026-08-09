@@ -50,6 +50,17 @@
 
         <div class="card mt-4">
             <div class="card-body">
+                <h3 class="h5 mb-3">Payment</h3>
+                <p class="mb-2"><span class="text-muted">Method:</span> {{ $order->payment_method === 'mock_online' ? 'Mock online payment' : 'Pay at counter' }}</p>
+                <p class="mb-3"><span class="text-muted">Status:</span> <span class="payment-status {{ $order->payment_status }}">{{ str($order->payment_status)->headline() }}</span></p>
+                @if ($order->payment_status !== 'paid' && $order->status !== 'deleted')
+                    <form method="POST" action="{{ route('admin.orders.payment.update', $order) }}" data-swal-confirm data-swal-title="Mark payment as paid?" data-swal-text="This records the order payment as received." data-swal-confirm-text="Mark as paid">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="payment_status" value="paid">
+                        <button class="btn btn-success w-100 mb-3"><i class="bi bi-check-circle me-1"></i>Mark as Paid</button>
+                    </form>
+                @endif
                 <h3 class="h5 mb-3">Update Status</h3>
                 @if (count($allowedStatuses))
                     <div class="d-grid gap-2">

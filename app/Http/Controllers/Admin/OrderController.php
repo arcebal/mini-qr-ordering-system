@@ -49,11 +49,32 @@ class OrderController extends Controller
             return back()->with('error', 'That status change is not allowed for this order.');
         }
 
+        if ($status === 'completed' && $order->payment_status !== 'paid') {
+            return back()->with('error', 'Payment must be marked as paid before completing this order.');
+        }
+
         $order->update(['status' => $status]);
 
         return redirect()
             ->route('admin.orders.show', $order)
             ->with('success', 'Order #'.$order->order_number.' marked as '.str($status)->headline().'.');
+    }
+
+    public function updatePayment(Request $request, Order $order): RedirectResponse
+    {
+        $request->validate([
+            'payment_status' => 'required|in:paid',
+        ]);
+
+        if ($order->status === 'deleted') {
+            return back()->with('error', 'Deleted orders cannot have their payment updated.');
+        }
+
+        $order->update(['payment_status' => 'paid']);
+
+        return redirect()
+            ->route('admin.orders.show', $order)
+            ->with('success', 'Order #'.$order->order_number.' payment marked as paid.');
     }
 
     public function destroy(Order $order): RedirectResponse

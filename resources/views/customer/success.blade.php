@@ -14,6 +14,10 @@
                 </div>
                 <span id="status-badge" class="status-badge status-{{ $order->status }}">{{ str($order->status)->headline() }}</span>
             </div>
+            <div id="payment-summary" class="payment-summary mb-4">
+                <i class="bi bi-{{ $order->payment_status === 'paid' ? 'check-circle' : 'clock' }}"></i>
+                <span>{{ $order->payment_method === 'mock_online' ? 'Mock online payment' : 'Pay at counter' }} · {{ str($order->payment_status)->headline() }}</span>
+            </div>
 
             <div id="deleted-notice" class="order-deleted-notice {{ $order->status === 'deleted' ? '' : 'd-none' }}" role="alert">
                 <i class="bi bi-exclamation-circle"></i>
@@ -53,6 +57,7 @@
     const message = document.getElementById('status-message');
     const refreshButton = document.getElementById('refresh-status');
     const deletedNotice = document.getElementById('deleted-notice');
+    const paymentSummary = document.getElementById('payment-summary');
 
     function updateTracker(status, label) {
         const currentIndex = statuses.indexOf(status);
@@ -71,6 +76,7 @@
             if (!response.ok) throw new Error('Unable to refresh status');
             const data = await response.json();
             updateTracker(data.status, data.label);
+            paymentSummary.innerHTML = `<i class="bi bi-${data.payment_status === 'paid' ? 'check-circle' : 'clock'}"></i><span>${data.payment_method_label} · ${data.payment_status_label}</span>`;
             message.textContent = `Last checked ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
         } catch (error) {
             message.textContent = 'Could not refresh right now. Please try again.';

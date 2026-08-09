@@ -113,7 +113,11 @@ class CartController extends Controller
             return redirect()->route('customer.menu')->with('warning', 'Your cart is empty.');
         }
 
-        $order = DB::transaction(function () use ($cart, $customerName) {
+        $paymentMethod = $request->validate([
+            'payment_method' => 'nullable|in:counter,mock_online',
+        ])['payment_method'] ?? 'counter';
+
+        $order = DB::transaction(function () use ($cart, $customerName, $paymentMethod) {
             $products = Product::query()
                 ->whereIn('id', array_keys($cart))
                 ->lockForUpdate()
@@ -143,7 +147,8 @@ class CartController extends Controller
                 'customer_name' => $customerName,
                 'total_amount' => $total,
                 'status' => 'accepted',
-                'payment_status' => 'unpaid',
+                'payment_status' => $paymentMethod === 'mock_online' ? 'paid' : 'unpaid',
+                'payment_method' => $paymentMethod,
             ]);
 
             foreach ($lineItems as $lineItem) {
@@ -185,6 +190,10 @@ class CartController extends Controller
         return response()->json([
             'status' => $order->status,
             'label' => str($order->status)->headline()->toString(),
+            'payment_method' => $order->payment_method,
+            'payment_method_label' => $order->payment_method === 'mock_online' ? 'Mock online payment' : 'Pay at counter',
+            'payment_status' => $order->payment_status,
+            'payment_status_label' => str($order->payment_status)->headline()->toString(),
             'updated_at' => $order->updated_at->toIso8601String(),
         ]);
     }

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#fffdf9">
+    <meta name="theme-color" content="#fff5f7">
     <title>@yield('title', 'Kusina Ni Aira')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        :root { --primary: #2f6b52; --primary-dark: #21513e; --ink: #22332b; --muted: #68766e; --line: #dce5dd; --canvas: #f4f7f3; --surface: #fffefb; --soft: #e3eee5; --success: #1f6b4f; }
+        :root { --primary: #c45c78; --primary-dark: #9f405d; --ink: #4a2d36; --muted: #80616b; --line: #f0cfd8; --canvas: #fff5f7; --surface: #fffafb; --soft: #fde4ea; --success: #a34b68; }
         * { box-sizing: border-box; }
         body { min-height: 100vh; background: var(--canvas); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
         h1, h2, h3 { letter-spacing: -.035em; }
@@ -16,9 +16,12 @@
         .skip-link:focus { top: 1rem; }
         .customer-nav { border-bottom: 1px solid var(--line); background: rgba(255, 253, 249, .94); backdrop-filter: blur(12px); }
         .brand { color: var(--ink); font-size: 1rem; font-weight: 750; letter-spacing: -.02em; text-decoration: none; }
-        .brand-mark { display: inline-grid; width: 31px; height: 31px; place-items: center; margin-right: .55rem; border-radius: 9px; background: var(--primary); color: #fff; }
+        .brand-mark { display: inline-grid; width: 36px; height: 36px; place-items: center; margin-right: .55rem; overflow: hidden; border-radius: 50%; background: var(--soft); color: var(--primary); vertical-align: middle; }
+        .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
         .cart-link { position: relative; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); text-decoration: none; }
         .cart-link:hover { border-color: var(--primary); color: var(--primary); }
+        .order-status-link { display: inline-flex; align-items: center; gap: .4rem; min-height: 38px; padding: 0 .8rem; border: 1px solid var(--line); border-radius: 10px; color: var(--primary); font-size: .8rem; font-weight: 750; text-decoration: none; }
+        .order-status-link:hover { border-color: var(--primary); background: var(--soft); color: var(--primary-dark); }
         .cart-count { position: absolute; top: -7px; right: -7px; min-width: 18px; padding: 2px 5px; border: 2px solid var(--surface); border-radius: 20px; background: var(--primary); color: #fff; font-size: 10px; font-weight: 700; text-align: center; }
         .hero { padding: clamp(3.75rem, 8vw, 6rem) 0 clamp(2.75rem, 6vw, 4.5rem); background: var(--surface); border-bottom: 1px solid var(--line); }
         .hero .eyebrow { color: var(--primary); font-size: .75rem; font-weight: 800; letter-spacing: .11em; }
@@ -31,7 +34,8 @@
         .menu-card, .customer-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: 0 2px 7px rgba(41, 35, 33, .035); }
         .menu-card { height: 100%; transition: transform .2s ease, box-shadow .2s ease; }
         .menu-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(41, 35, 33, .08); }
-        .menu-image, .image-placeholder { width: 100%; height: 188px; object-fit: cover; background: var(--soft); }
+        .menu-image, .image-placeholder { width: 100%; height: 188px; object-fit: contain; background: var(--soft); }
+        .menu-image { padding: 12px; }
         .image-placeholder { display: grid; place-items: center; color: var(--primary); font-size: 38px; }
         .menu-card .card-body, .customer-card .card-body { padding: 20px; }
         .menu-card h3 { margin-bottom: .45rem; font-size: 1.08rem; font-weight: 750; }
@@ -45,16 +49,18 @@
         .status-badge { display: inline-block; padding: 5px 9px; border-radius: 999px; font-size: 11px; font-weight: 750; }
         .status-out { background: #f9e2df; color: #9b3027; } .status-unavailable { background: #f5eed4; color: #775e20; }
         .status-accepted { background: #e6f0f7; color: #175a7a; } .status-preparing { background: #fff3d8; color: #855b16; } .status-completed { background: #e1f0e7; color: #1f6546; } .status-deleted { background: #f8e2e0; color: #9b3029; }
-        .cart-image { width: 76px; height: 76px; flex: 0 0 76px; border-radius: 10px; object-fit: cover; background: var(--soft); }
+        .cart-image { width: 76px; height: 76px; flex: 0 0 76px; padding: 5px; border-radius: 10px; object-fit: contain; background: var(--soft); }
         .quantity-control { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 9px; padding: 3px; }
         .quantity-control form { margin: 0; } .quantity-control button { width: 30px; height: 30px; border: 0; border-radius: 7px; background: #f5f2ee; color: var(--ink); }
         .quantity-control button:hover { background: var(--soft); color: var(--primary); }
         .quantity-value { min-width: 20px; text-align: center; font-size: 14px; font-weight: 750; }
         .summary-total { color: var(--primary); font-size: 1.25rem; font-weight: 800; }
-        .form-control { min-height: 46px; border-color: var(--line); border-radius: 9px; } .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 .2rem rgba(185, 77, 50, .13); }
+        .form-control { min-height: 46px; border-color: var(--line); border-radius: 9px; } .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 .2rem rgba(196, 92, 120, .16); }
         .empty-state { padding: 56px 24px; text-align: center; } .empty-state i { color: var(--primary); font-size: 48px; }
-        .welcome-card { margin-top: clamp(1.5rem, 8vh, 5rem); } .welcome-mark { display: grid; width: 52px; height: 52px; place-items: center; border-radius: 14px; background: var(--soft); color: var(--primary); font-size: 24px; }
+        .welcome-card { margin-top: clamp(1.5rem, 8vh, 5rem); } .welcome-mark { display: grid; width: 70px; height: 70px; place-items: center; overflow: hidden; border-radius: 18px; background: var(--soft); color: var(--primary); font-size: 24px; } .welcome-mark img { width: 100%; height: 100%; object-fit: contain; }
         .customer-identity { display: flex; align-items: center; gap: .6rem; padding: .8rem .9rem; border: 1px solid var(--line); border-radius: 9px; background: #fafcf9; color: var(--muted); font-size: .92rem; } .customer-identity i { color: var(--primary); font-size: 1.1rem; }
+        .payment-option { display: flex; align-items: flex-start; gap: 11px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; } .payment-option:has(input:checked) { border-color: var(--primary); background: var(--soft); } .payment-option input { margin-top: 4px; accent-color: var(--primary); } .payment-option span { display: block; } .payment-option strong { display: block; color: var(--ink); font-size: .9rem; } .payment-option small { display: block; margin-top: 3px; color: var(--muted); font-size: .78rem; }
+        .payment-summary { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .7rem; border-radius: 999px; background: var(--soft); color: var(--ink); font-size: .78rem; font-weight: 700; }
         .order-tracker h1 { font-size: clamp(1.8rem, 4vw, 2.3rem); font-weight: 750; }
         .status-timeline { position: relative; display: grid; gap: 0; margin: 2rem 0; padding: 0; list-style: none; }
         .status-timeline li { position: relative; display: grid; grid-template-columns: 38px 1fr; gap: 14px; min-height: 90px; color: var(--muted); }
@@ -83,6 +89,8 @@
             .cart-header .btn { width: 100%; }
             .tracker-footer { align-items: stretch; flex-direction: column; }
             .tracker-footer .btn { width: 100%; }
+            .order-status-link { padding: 0 .65rem; font-size: .75rem; }
+            .order-status-link span { display: none; }
             .status-timeline li { grid-template-columns: 34px 1fr; gap: 10px; min-height: 82px; }
             .timeline-icon { width: 34px; height: 34px; }
             .status-timeline li:not(:last-child)::before { left: 16px; top: 34px; }
@@ -93,11 +101,19 @@
     <a class="skip-link" href="#main-content">Skip to menu content</a>
     <nav class="navbar customer-nav sticky-top" aria-label="Customer navigation">
         <div class="container py-2">
-            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><i class="bi bi-qr-code-scan"></i></span>Kusina Ni Aira</a>
-            <a class="cart-link" href="{{ route('customer.cart.index') }}" aria-label="View cart">
-                <i class="bi bi-bag fs-5"></i>
-                @if (array_sum(session('customer_cart', [])) > 0)<span class="cart-count">{{ array_sum(session('customer_cart', [])) }}</span>@endif
-            </a>
+            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt=""></span>Kusina Ni Aira</a>
+            <div class="d-flex align-items-center gap-2">
+                @php($latestOrderId = collect(session('customer_order_ids', []))->last())
+                @if ($latestOrderId)
+                    <a class="order-status-link" href="{{ route('customer.order-success', $latestOrderId) }}" aria-label="View latest order status">
+                        <i class="bi bi-receipt-cutoff"></i><span>Order status</span>
+                    </a>
+                @endif
+                <a class="cart-link" href="{{ route('customer.cart.index') }}" aria-label="View cart">
+                    <i class="bi bi-bag fs-5"></i>
+                    @if (array_sum(session('customer_cart', [])) > 0)<span class="cart-count">{{ array_sum(session('customer_cart', [])) }}</span>@endif
+                </a>
+            </div>
         </div>
     </nav>
     @yield('content')

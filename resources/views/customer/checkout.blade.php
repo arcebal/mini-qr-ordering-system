@@ -29,6 +29,20 @@
             </div>
             <form method="POST" action="{{ route('customer.checkout.place') }}">
                 @csrf
+                <fieldset class="mb-4">
+                    <legend class="form-label mb-2">Payment method</legend>
+                    <div class="d-grid gap-2">
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="counter" checked>
+                            <span><i class="bi bi-shop me-2"></i><strong>Pay at counter</strong><small>Pay when you arrive at the restaurant.</small></span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="mock_online">
+                            <span><i class="bi bi-credit-card me-2"></i><strong>Mock online payment</strong><small>Simulate a successful online payment.</small></span>
+                        </label>
+                    </div>
+                    @error('payment_method')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                </fieldset>
                 <button class="btn btn-copper w-100 py-2">Place Order <i class="bi bi-arrow-right ms-1"></i></button>
             </form>
         </div>

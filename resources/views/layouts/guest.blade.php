@@ -16,14 +16,14 @@
 
         <style>
             :root {
-                --auth-ink: #22332b;
-                --auth-muted: #68766e;
-                --auth-primary: #2f6b52;
-                --auth-primary-dark: #21513e;
-                --auth-line: #dce5dd;
-                --auth-canvas: #f4f7f3;
-                --auth-surface: #fffefb;
-                --auth-soft: #e3eee5;
+                --auth-ink: #4a2d36;
+                --auth-muted: #80616b;
+                --auth-primary: #c45c78;
+                --auth-primary-dark: #9f405d;
+                --auth-line: #f0cfd8;
+                --auth-canvas: #fff5f7;
+                --auth-surface: #fffafb;
+                --auth-soft: #fde4ea;
             }
 
             * { box-sizing: border-box; }
@@ -59,7 +59,7 @@
                 right: -120px;
                 width: 420px;
                 height: 420px;
-                background: rgba(47, 107, 82, .10);
+                background: rgba(196, 92, 120, .10);
             }
 
             .auth-page::after {
@@ -67,7 +67,7 @@
                 left: -140px;
                 width: 500px;
                 height: 500px;
-                background: rgba(126, 166, 138, .12);
+                background: rgba(230, 160, 178, .14);
             }
 
             .auth-shell {
@@ -95,7 +95,7 @@
                 background: var(--auth-primary);
                 color: #fff;
                 font-size: 22px;
-                box-shadow: 0 9px 18px rgba(47, 107, 82, .18);
+                box-shadow: 0 9px 18px rgba(196, 92, 120, .18);
             }
 
             .auth-brand-name { font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; }
@@ -127,7 +127,7 @@
                 outline: none;
                 transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
             }
-            .auth-input:focus { border-color: var(--auth-primary); background: #fff; box-shadow: 0 0 0 4px rgba(47, 107, 82, .12); }
+            .auth-input:focus { border-color: var(--auth-primary); background: #fff; box-shadow: 0 0 0 4px rgba(196, 92, 120, .12); }
             .auth-input::placeholder { color: #9aa79e; }
             .auth-error { margin-top: 7px; color: #9b3029; font-size: .8rem; }
             .auth-status { margin-bottom: 18px; padding: 10px 12px; border: 1px solid #b9d8c3; border-radius: 9px; background: #edf8f0; color: #28613f; font-size: .84rem; }
@@ -153,8 +153,8 @@
                 cursor: pointer;
                 transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
             }
-            .auth-submit:hover { background: var(--auth-primary-dark); box-shadow: 0 8px 17px rgba(47, 107, 82, .18); transform: translateY(-1px); }
-            .auth-submit:focus-visible, .auth-link:focus-visible, .auth-brand:focus-visible { outline: 3px solid rgba(47, 107, 82, .35); outline-offset: 3px; }
+            .auth-submit:hover { background: var(--auth-primary-dark); box-shadow: 0 8px 17px rgba(196, 92, 120, .18); transform: translateY(-1px); }
+            .auth-submit:focus-visible, .auth-link:focus-visible, .auth-brand:focus-visible { outline: 3px solid rgba(196, 92, 120, .35); outline-offset: 3px; }
             .auth-footer { margin: 20px 0 0; color: var(--auth-muted); font-size: .76rem; text-align: center; }
             .auth-footer i { margin-right: 4px; color: var(--auth-primary); }
 
@@ -172,7 +172,7 @@
         <main class="auth-page">
             <div class="auth-shell">
                 <a class="auth-brand" href="{{ url('/') }}" aria-label="Kusina Ni Aira home">
-                    <span class="auth-brand-mark"><i class="bi bi-qr-code-scan" aria-hidden="true"></i></span>
+                    <span class="auth-brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt="" style="width: 100%; height: 100%; object-fit: contain;"></span>
                     <span class="auth-brand-name">Kusina Ni Aira</span>
                 </a>
 

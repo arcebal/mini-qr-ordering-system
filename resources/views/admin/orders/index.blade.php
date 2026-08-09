@@ -19,6 +19,7 @@
                         <th>Items</th>
                         <th>Total</th>
                         <th>Status</th>
+                        <th>Payment</th>
                         <th>Received</th>
                         <th width="110">Action</th>
                     </tr>
@@ -31,12 +32,13 @@
                             <td>{{ $order->items_count }}</td>
                             <td>₱ {{ number_format($order->total_amount, 2) }}</td>
                             <td><span class="order-status {{ $order->status }}">{{ str($order->status)->headline() }}</span></td>
+                            <td><span class="payment-status {{ $order->payment_status }}">{{ str($order->payment_status)->headline() }}</span></td>
                             <td>{{ $order->created_at->format('M d, Y g:i A') }}</td>
                             <td><a href="{{ route('admin.orders.show', $order) }}" class="btn btn-warning btn-sm">View</a></td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">No customer orders have been received yet.</td>
+                            <td colspan="8" class="text-center py-5 text-muted">No customer orders have been received yet.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -50,6 +52,7 @@
                     <div class="d-flex justify-content-between gap-3 small mb-1"><span class="data-card-label">Customer</span><span class="text-end text-break">{{ $order->customer_name }}</span></div>
                     <div class="d-flex justify-content-between gap-3 small mb-1"><span class="data-card-label">Items</span><span>{{ $order->items_count }}</span></div>
                     <div class="d-flex justify-content-between gap-3 small mb-3"><span class="data-card-label">Total</span><strong>₱ {{ number_format($order->total_amount, 2) }}</strong></div>
+                    <div class="d-flex justify-content-between gap-3 small mb-3"><span class="data-card-label">Payment</span><span class="payment-status {{ $order->payment_status }}">{{ str($order->payment_status)->headline() }}</span></div>
                     <div class="d-flex justify-content-between align-items-center gap-2"><small class="text-muted">{{ $order->created_at->format('M d, Y g:i A') }}</small><a href="{{ route('admin.orders.show', $order) }}" class="btn btn-warning btn-sm">View order</a></div>
                 </article>
             @empty

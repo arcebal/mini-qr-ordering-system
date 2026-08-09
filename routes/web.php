@@ -45,6 +45,7 @@ Route::middleware(['auth', EnsureAdmin::class])->prefix('admin')->name('admin.')
     Route::resource('products', ProductController::class);
 
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::patch('orders/{order}/payment', [OrderController::class, 'updatePayment'])->name('orders.payment.update');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/export/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
