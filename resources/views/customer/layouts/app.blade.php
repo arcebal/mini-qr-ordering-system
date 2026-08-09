@@ -101,7 +101,7 @@
     <a class="skip-link" href="#main-content">Skip to menu content</a>
     <nav class="navbar customer-nav sticky-top" aria-label="Customer navigation">
         <div class="container py-2">
-            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><img src="{{ Vite::asset('resources/images/kusina-logo.png') }}" alt=""></span>Kusina Ni Aira</a>
+            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt=""></span>Kusina Ni Aira</a>
             <div class="d-flex align-items-center gap-2">
                 @php($latestOrderId = collect(session('customer_order_ids', []))->last())
                 @if ($latestOrderId)
