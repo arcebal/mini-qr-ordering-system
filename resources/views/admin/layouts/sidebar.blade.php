@@ -5,7 +5,7 @@
         </button>
     </div>
     <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-        <span class="sidebar-brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt=""></span>
+        <span class="sidebar-brand-mark"><img src="{{ Vite::asset('resources/images/kusina-logo.png') }}" alt=""></span>
         <span>
             <strong>Kusina Ni Aira</strong>
             <small>Restaurant admin</small>
