@@ -16,7 +16,7 @@ class CatalogTest extends TestCase
 
     public function test_authenticated_user_can_view_category_index(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
 
         $this->actingAs($user)
             ->get(route('admin.categories.index'))
@@ -26,7 +26,7 @@ class CatalogTest extends TestCase
 
     public function test_authenticated_user_can_view_product_create_page(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $category = Category::create([
             'name' => 'Main Courses',
             'is_active' => true,
@@ -41,7 +41,7 @@ class CatalogTest extends TestCase
 
     public function test_authenticated_user_can_create_a_product(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $category = Category::create([
             'name' => 'Main Courses',
             'is_active' => true,
@@ -68,7 +68,7 @@ class CatalogTest extends TestCase
 
     public function test_product_creation_requires_the_required_fields(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
 
         $this->actingAs($user)
             ->from(route('admin.products.create'))
@@ -79,7 +79,7 @@ class CatalogTest extends TestCase
 
     public function test_category_with_products_requires_force_confirmation_before_deletion(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $category = Category::create(['name' => 'Main Courses', 'is_active' => true]);
         $product = Product::create([
             'category_id' => $category->id,
@@ -102,7 +102,7 @@ class CatalogTest extends TestCase
     {
         Storage::fake('public');
 
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $category = Category::create(['name' => 'Main Courses', 'is_active' => true]);
         $imagePath = 'products/chicken-adobo.png';
         Storage::disk('public')->put($imagePath, 'image-content');
@@ -127,7 +127,7 @@ class CatalogTest extends TestCase
 
     public function test_category_with_products_in_existing_orders_cannot_be_force_deleted(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $category = Category::create(['name' => 'Main Courses', 'is_active' => true]);
         $product = Product::create([
             'category_id' => $category->id,

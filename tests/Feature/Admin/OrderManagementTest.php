@@ -15,7 +15,7 @@ class OrderManagementTest extends TestCase
 
     public function test_authenticated_user_can_view_order_list_and_details(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $order = $this->order();
 
         $this->actingAs($user)
@@ -33,7 +33,7 @@ class OrderManagementTest extends TestCase
 
     public function test_order_can_follow_its_allowed_status_lifecycle(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $order = $this->order();
 
         $this->actingAs($user)
@@ -51,7 +51,7 @@ class OrderManagementTest extends TestCase
 
     public function test_order_cannot_skip_a_status_transition(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $order = $this->order();
 
         $this->actingAs($user)
@@ -65,7 +65,7 @@ class OrderManagementTest extends TestCase
 
     public function test_authenticated_user_can_delete_an_order(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $order = $this->order();
 
         $this->actingAs($user)

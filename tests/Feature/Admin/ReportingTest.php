@@ -15,7 +15,7 @@ class ReportingTest extends TestCase
 
     public function test_dashboard_uses_completed_orders_for_sales_charts_and_metrics(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $product = $this->product(['stock' => 4]);
         $this->order($product, 'completed', 2, now()->subDays(2));
         $this->order($product, 'accepted', 4, now()->subDay());
@@ -34,7 +34,7 @@ class ReportingTest extends TestCase
 
     public function test_reports_can_be_exported_as_pdf_and_excel_for_the_selected_dates(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $product = $this->product();
         $this->order($product, 'completed', 1, now()->subDay());
         $dates = ['start_date' => now()->subDays(2)->toDateString(), 'end_date' => now()->toDateString()];
@@ -58,7 +58,7 @@ class ReportingTest extends TestCase
 
     public function test_reports_reject_a_date_range_with_the_end_before_the_start(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
 
         $this->actingAs($user)
             ->get(route('admin.reports.index', ['start_date' => '2026-08-07', 'end_date' => '2026-08-01']))
@@ -67,7 +67,7 @@ class ReportingTest extends TestCase
 
     public function test_reports_show_only_orders_inside_the_selected_date_range(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $product = $this->product();
         $included = $this->order($product, 'accepted', 1, now()->subDays(2));
         $excluded = $this->order($product, 'completed', 1, now()->subDays(10));
