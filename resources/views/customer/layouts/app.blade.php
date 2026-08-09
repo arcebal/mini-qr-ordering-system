@@ -17,7 +17,6 @@
         .customer-nav { border-bottom: 1px solid var(--line); background: rgba(255, 253, 249, .94); backdrop-filter: blur(12px); }
         .brand { color: var(--ink); font-size: 1rem; font-weight: 750; letter-spacing: -.02em; text-decoration: none; }
         .brand-mark { display: inline-grid; width: 36px; height: 36px; place-items: center; margin-right: .55rem; overflow: hidden; border-radius: 50%; background: var(--soft); color: var(--primary); vertical-align: middle; }
-        .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
         .cart-link { position: relative; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); text-decoration: none; }
         .cart-link:hover { border-color: var(--primary); color: var(--primary); }
         .order-status-link { display: inline-flex; align-items: center; gap: .4rem; min-height: 38px; padding: 0 .8rem; border: 1px solid var(--line); border-radius: 10px; color: var(--primary); font-size: .8rem; font-weight: 750; text-decoration: none; }
@@ -57,7 +56,7 @@
         .summary-total { color: var(--primary); font-size: 1.25rem; font-weight: 800; }
         .form-control { min-height: 46px; border-color: var(--line); border-radius: 9px; } .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 .2rem rgba(196, 92, 120, .16); }
         .empty-state { padding: 56px 24px; text-align: center; } .empty-state i { color: var(--primary); font-size: 48px; }
-        .welcome-card { margin-top: clamp(1.5rem, 8vh, 5rem); } .welcome-mark { display: grid; width: 70px; height: 70px; place-items: center; overflow: hidden; border-radius: 18px; background: var(--soft); color: var(--primary); font-size: 24px; } .welcome-mark img { width: 100%; height: 100%; object-fit: contain; }
+        .welcome-card { margin-top: clamp(1.5rem, 8vh, 5rem); } .welcome-mark { display: grid; width: 70px; height: 70px; place-items: center; overflow: hidden; border-radius: 18px; background: var(--soft); color: var(--primary); font-size: 32px; }
         .customer-identity { display: flex; align-items: center; gap: .6rem; padding: .8rem .9rem; border: 1px solid var(--line); border-radius: 9px; background: #fafcf9; color: var(--muted); font-size: .92rem; } .customer-identity i { color: var(--primary); font-size: 1.1rem; }
         .payment-option { display: flex; align-items: flex-start; gap: 11px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; } .payment-option:has(input:checked) { border-color: var(--primary); background: var(--soft); } .payment-option input { margin-top: 4px; accent-color: var(--primary); } .payment-option span { display: block; } .payment-option strong { display: block; color: var(--ink); font-size: .9rem; } .payment-option small { display: block; margin-top: 3px; color: var(--muted); font-size: .78rem; }
         .payment-summary { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .7rem; border-radius: 999px; background: var(--soft); color: var(--ink); font-size: .78rem; font-weight: 700; }
@@ -101,7 +100,7 @@
     <a class="skip-link" href="#main-content">Skip to menu content</a>
     <nav class="navbar customer-nav sticky-top" aria-label="Customer navigation">
         <div class="container py-2">
-            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt=""></span>Kusina Ni Aira</a>
+            <a class="brand" href="{{ route('customer.menu') }}"><span class="brand-mark"><i class="bi bi-person-standing-dress" aria-hidden="true"></i></span>Kusina Ni Aira</a>
             <div class="d-flex align-items-center gap-2">
                 @php($latestOrderId = collect(session('customer_order_ids', []))->last())
                 @if ($latestOrderId)

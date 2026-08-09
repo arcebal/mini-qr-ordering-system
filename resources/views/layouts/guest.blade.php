@@ -172,7 +172,7 @@
         <main class="auth-page">
             <div class="auth-shell">
                 <a class="auth-brand" href="{{ url('/') }}" aria-label="Kusina Ni Aira home">
-                    <span class="auth-brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt="" style="width: 100%; height: 100%; object-fit: contain;"></span>
+                    <span class="auth-brand-mark"><i class="bi bi-person-standing-dress" aria-hidden="true"></i></span>
                     <span class="auth-brand-name">Kusina Ni Aira</span>
                 </a>
 

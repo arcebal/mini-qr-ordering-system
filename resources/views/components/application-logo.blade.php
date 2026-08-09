@@ -1,1 +1,1 @@
-<img src="{{ asset('images/kusina-logo.png') }}" alt="Kusina Ni Aira" {{ $attributes }}>
+<i {{ $attributes->merge(['class' => 'bi bi-person-standing-dress']) }} aria-label="Kusina Ni Aira"></i>

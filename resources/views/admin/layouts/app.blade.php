@@ -92,8 +92,6 @@
             color: #fff;
             font-size: 20px;
         }
-        .sidebar-brand-mark img { width: 100%; height: 100%; object-fit: contain; }
-
         .sidebar-brand strong { display: block; font-size: 16px; letter-spacing: -.2px; }
         .sidebar-brand small { color: var(--sidebar-muted); font-size: 11px; }
         .sidebar-nav { display: grid; gap: 6px; padding-top: 24px; }

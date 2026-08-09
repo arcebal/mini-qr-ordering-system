@@ -5,7 +5,7 @@
         </button>
     </div>
     <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-        <span class="sidebar-brand-mark"><img src="{{ asset('images/kusina-logo.png') }}" alt=""></span>
+        <span class="sidebar-brand-mark"><i class="bi bi-person-standing-dress" aria-hidden="true"></i></span>
         <span>
             <strong>Kusina Ni Aira</strong>
             <small>Restaurant admin</small>
