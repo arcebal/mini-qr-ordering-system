@@ -1,43 +1,110 @@
-# QR Restaurant Ordering System
+# Kusina Ni Aira QR Restaurant Ordering System
 
-A Laravel-based restaurant ordering system for QR-driven, account-free customer ordering and authenticated restaurant administration.
+Kusina Ni Aira is a Laravel-based restaurant ordering system designed around a simple QR ordering experience. Customers scan the restaurant QR code, enter their name, browse the menu, place an order without creating an account, and track the order status. Restaurant administrators use a protected dashboard to manage the catalog, inventory, orders, payments, and sales reports.
 
-## Features
+## What the system provides
 
 ### Customer ordering
 
-- Public landing page for starting an order
-- Customer name captured once in the session; no customer account is required
-- Mobile-friendly menu grouped by category
-- Product availability and stock visibility
+- Public, mobile-friendly ordering with no customer login or registration
+- Customer name captured in the session for order identification
+- Menu grouped by category
+- Product images, descriptions, prices, availability, and stock limits
 - Session-based cart with quantity controls and subtotal calculation
-- Checkout using the customer's name only
-- Order confirmation page with an order number
-- Customer order-status endpoint for tracking accepted, preparing, and completed orders
+- Checkout with counter payment or mock online payment
+- Order confirmation with a generated order number
+- Automatic order-status tracking for `accepted`, `preparing`, and `completed` orders
 
-### Administration
+### Restaurant administration
 
-- Authenticated dashboard
-- Category management
-- Product management, including image upload, replacement, price, stock, and availability
-- Order list and order details
+- Authenticated admin dashboard
+- Category creation, editing, and deletion
+- Product management with category, price, stock, availability, and image upload
+- Incoming order list and detailed order view
+- Payment tracking for unpaid and paid orders
 - Controlled order lifecycle: `accepted` → `preparing` → `completed`
-- Order deletion that preserves the order items while marking the order as `deleted`
-- Automatic stock deduction when an order is placed
-- Automatic sold-out handling when stock reaches zero
+- Order deletion by marking the order as `deleted` while retaining its history
 - Dashboard metrics and charts based on completed orders
 - Date-filtered reports with PDF and Excel export
 
+## Restaurant QR code
+
+Customers can use the QR code below to open the restaurant ordering page.
+
+![Kusina Ni Aira restaurant ordering QR code](Continuation/kusinaniairaQR.png)
+
+### What happens after scanning
+
+1. The QR code opens the application URL configured in `APP_URL`.
+2. The customer enters their name. No account is required.
+3. The customer browses the available menu and adds items to the cart.
+4. At checkout, the customer selects `Pay at counter` or `Mock online payment`.
+5. The order is submitted and the customer receives an order number.
+6. The restaurant sees the order in the admin order queue.
+7. The customer can keep the confirmation page open while the order moves through its status updates.
+
+For a deployed restaurant installation, set `APP_URL` to the public URL encoded in the QR code. If the public URL changes, generate or replace the QR code so it points to the new address.
+
+## User flows
+
+### Customer flow
+
+```text
+Scan QR
+  ↓
+Enter name
+  ↓
+Browse menu
+  ↓
+Add items to cart
+  ↓
+Adjust quantities and review subtotal
+  ↓
+Choose payment method
+  ↓
+Place order
+  ↓
+Receive order number
+  ↓
+Track accepted → preparing → completed
+```
+
+Only products marked available and having stock greater than zero can be ordered. The system rechecks stock inside a database transaction when checkout is submitted. If another order has used the remaining stock, the current order is rejected instead of being created.
+
+For counter payment, a new order starts as unpaid and must be marked as paid by an administrator before it can be completed. Mock online payment simulates a successful payment for testing and demonstration purposes; it is not a real payment gateway.
+
+### Admin flow
+
+```text
+Log in
+  ↓
+Open dashboard
+  ↓
+Manage categories and products
+  ↓
+Maintain prices, images, availability, and stock
+  ↓
+Review incoming orders
+  ↓
+Mark counter payments as paid when received
+  ↓
+Move orders through accepted → preparing → completed
+  ↓
+Review dashboard metrics and export reports
+```
+
+Administrators can access the protected area under `/admin`. Non-admin authenticated users cannot access admin pages.
+
 ## Technology stack
 
-- PHP 8.3+
+- PHP 8.4 or newer
 - Laravel 13
 - Laravel Breeze authentication
 - Blade templates
-- Tailwind CSS and Vite
-- Alpine.js
-- Chart.js
-- SQLite by default, with Laravel-supported database drivers available
+- Tailwind CSS, Vite, and Alpine.js
+- Chart.js dashboard charts
+- MySQL by default, with other Laravel-supported database drivers available
+- Cloudinary for uploaded product images
 - `barryvdh/laravel-dompdf` for PDF reports
 - `maatwebsite/excel` for Excel reports
 
@@ -45,10 +112,11 @@ A Laravel-based restaurant ordering system for QR-driven, account-free customer 
 
 Install the following before setting up the project:
 
-- PHP 8.3 or newer
+- PHP 8.4+
 - Composer
 - Node.js and npm
-- A database supported by Laravel (SQLite is the default configuration)
+- MySQL or another database supported by Laravel
+- PHP GD extension
 
 ## Installation
 
@@ -59,67 +127,90 @@ git clone <repository-url>
 cd qr-restaurant-system
 ```
 
-Install the PHP and JavaScript dependencies, create the environment file, generate the application key, run migrations, and build the frontend assets:
+Create the environment file, install dependencies, generate an application key, run migrations, and build the frontend assets:
 
 ```bash
 composer run setup
 ```
 
-The setup script runs the equivalent of:
+The setup script performs the equivalent of:
 
 ```bash
 composer install
+cp .env.example .env
 php artisan key:generate
 php artisan migrate --force
 npm install --ignore-scripts
 npm run build
 ```
 
-If using uploaded product images, create Laravel's public storage link:
+On Windows, the setup script copies `.env.example` automatically through Composer, so the `cp` command above is only a description of the equivalent Unix operation.
+
+Create the public storage link if product images use Laravel's local public disk or if the deployment requires the link:
 
 ```bash
 php artisan storage:link
 ```
 
-For local development, start the application and Vite watcher with:
+Update `.env` with the database and application settings before using the application:
 
-```bash
-composer run dev
+```dotenv
+APP_NAME="Kusina Ni Aira"
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=qr_restaurant_system
+DB_USERNAME=root
+DB_PASSWORD=password
 ```
 
-The application is normally available at [http://localhost:8000](http://localhost:8000).
+The database must exist before running migrations. For production, use a unique `APP_KEY`, set `APP_ENV=production`, set `APP_DEBUG=false`, and store database and Cloudinary credentials in deployment secrets rather than committing them.
 
-## Environment configuration
+### Cloudinary configuration
 
-The example environment is configured for MySQL. Set the `DB_*` variables in `.env` or Railway to match your database, and configure `APP_URL` to the URL used by the restaurant's QR code.
+The default environment configuration uses Cloudinary for product image storage. Set the provider URL in `.env` or in the deployment platform:
 
-For Railway's Railpack builder, add this service variable so the required PHP extensions are installed during the build:
+```dotenv
+FILESYSTEM_DISK=cloudinary
+CLOUDINARY_URL=<cloudinary-connection-url>
+```
+
+For Railway's Railpack builder, add the required PHP extensions as a service variable:
 
 ```dotenv
 RAILPACK_PHP_EXTENSIONS=gd,redis
 ```
 
-Set `APP_ENV=production`, `APP_DEBUG=false`, and generate a unique production `APP_KEY`. Keep database and Cloudinary credentials in Railway variables rather than committing them to the repository.
+### Start local development
 
-For local development, mail is sent to the log by default and queued work uses the database queue. No external mail or payment provider is required for the current ordering flow.
+Run the Laravel server, queue listener, log viewer, and Vite development server together:
 
-## Usage
-
-### Customer flow
-
-```text
-Open QR URL → Enter name → Browse menu → Add to cart → Checkout → Track order
+```bash
+composer run dev
 ```
 
-The customer entry point is `/`. After a name is entered, the menu is available at `/menu`.
+The application is normally available at [http://localhost:8000](http://localhost:8000). If the QR code is being tested from a phone, the phone must be able to reach the computer hosting the application, and `APP_URL` should use an accessible network address rather than `localhost`.
 
-### Admin flow
+## Admin access
+
+The database seeder creates a development administrator when the database is seeded:
 
 ```text
-Register/login → Dashboard → Manage categories/products → Review orders → Update status → View reports
+Email:    admin@example.com
+Password: password
 ```
 
-Authenticated administration is available under `/admin`. The dashboard is available at `/admin/dashboard`.
+Use these credentials only for local development or demonstrations. Change the password and use a controlled administrator account before deploying the system publicly.
+
+To run the seeder explicitly:
+
+```bash
+php artisan db:seed
+```
+
+The admin login is available at `/login`, and the dashboard is available at `/admin/dashboard`.
 
 ## Important routes
 
@@ -128,24 +219,35 @@ Authenticated administration is available under `/admin`. The dashboard is avail
 | Customer | `/` | Start an order and enter a customer name |
 | Customer | `/menu` | Browse available products |
 | Customer | `/cart` | Review and edit the cart |
-| Customer | `/checkout` | Place an order |
+| Customer | `/checkout` | Select payment and place an order |
+| Customer | `/orders/{order}` | View the order confirmation and status |
+| Admin | `/login` | Admin authentication |
 | Admin | `/admin/dashboard` | View operational and sales metrics |
 | Admin | `/admin/categories` | Manage categories |
-| Admin | `/admin/products` | Manage products and stock |
-| Admin | `/admin/orders` | Manage incoming orders |
+| Admin | `/admin/products` | Manage products, images, and stock |
+| Admin | `/admin/orders` | Review and update orders |
 | Admin | `/admin/reports` | View and export reports |
 
-## Order and inventory behavior
+## Order, payment, and inventory behavior
 
-New orders are created with status `accepted` and payment status `unpaid`. An administrator can advance an order only through the supported sequence:
+New orders are created with status `accepted`. The supported status sequence is:
 
 ```text
 accepted → preparing → completed
 ```
 
-When checkout succeeds, the application validates current stock inside a database transaction, creates the order and order items, deducts stock, and marks products unavailable when their stock reaches zero. If the cart exceeds current stock, the order is not created.
+Orders using `Pay at counter` start as `unpaid`. An administrator can mark them as paid, after which they can be completed. `Mock online payment` starts as `paid` and exists only to simulate a successful online payment during testing or demonstrations.
 
-Deleted orders use the `deleted` status and remain available for historical reference. Deleted orders are excluded from active order lists and completed-sales reporting.
+When checkout succeeds, the application:
+
+1. Locks the selected products for the transaction.
+2. Verifies that every product is available and has enough stock.
+3. Creates the order and its order items using the current product prices.
+4. Deducts the ordered quantities from stock.
+5. Marks products unavailable when their remaining stock reaches zero.
+6. Clears the customer's cart and records the order in the customer's session.
+
+Deleted orders are excluded from active order lists and completed-sales reporting. Their order data remains available for historical reference.
 
 ## Testing
 
@@ -155,30 +257,33 @@ Run the complete feature and unit test suite with:
 composer run test
 ```
 
-The suite covers authentication, customer ordering, cart validation, inventory deduction, admin catalog management, order transitions, and PDF/Excel reporting.
+The tests cover authentication, admin authorization, profile management, customer menu and cart behavior, checkout validation, stock deduction, order status transitions, payment handling, catalog management, and PDF/Excel reporting.
 
 ## Project structure
 
 ```text
 app/
-├── Http/Controllers/Customer   Customer menu, cart, checkout, and order status
-├── Http/Controllers/Admin      Dashboard, catalog, orders, and reports
-├── Models                      User, Category, Product, Order, and OrderItem
-├── Services                    Report aggregation and dashboard metrics
-└── Exports                     Excel report exports
+├── Http/Controllers/Customer   Customer start, menu, cart, checkout, and status
+├── Http/Controllers/Admin       Dashboard, catalog, orders, and reports
+├── Http/Middleware              Customer-session and admin access checks
+├── Models                       User, Category, Product, Order, and OrderItem
+├── Services                     Report aggregation and dashboard metrics
+└── Exports                      Excel report exports
 database/migrations              Application schema and order-status changes
 resources/views                  Customer, admin, auth, and shared Blade views
 routes/web.php                   Customer and admin web routes
 tests/Feature                    Authentication, ordering, admin, and reporting tests
+Continuation/                    Project notes and Kusina Ni Aira QR assets
 ```
 
 ## Development notes
 
-- Keep the customer checkout limited to the customer's name unless the requirements change.
+- Keep customer checkout limited to the current name and payment-method flow unless requirements change.
 - Only available products with sufficient stock should be orderable.
 - Completed orders are the source for revenue and sales metrics.
-- Product and category deletion must preserve historical order integrity.
-- Run the test suite after changes to order status, inventory, or reporting logic.
+- Preserve product and category history needed by existing order records.
+- Treat mock online payment as a test-only simulation, not a production payment integration.
+- Run the test suite after changing order status, inventory, payment, or reporting logic.
 
 ## License
 
